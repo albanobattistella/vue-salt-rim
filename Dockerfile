@@ -12,12 +12,14 @@ RUN sed -i "s/{{VERSION}}/$BUILD_VERSION/g" ./docker/config.js
 
 RUN npm run build
 
-FROM nginx AS prod
+FROM caddy:2.8-alpine AS prod
+
+RUN apk add gettext
 
 COPY --from=build /app/dist /var/www/html
 
 COPY --from=build /app/docker/config.js /var/www/config.js
-COPY ./docker/nginx.conf /etc/nginx/nginx.conf
+COPY ./docker/Caddyfile /etc/caddy/Caddyfile
 COPY ./docker/entrypoint.sh /usr/local/bin/entrypoint
 
 RUN chmod +x /usr/local/bin/entrypoint

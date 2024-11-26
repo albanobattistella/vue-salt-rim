@@ -1,0 +1,9 @@
+:8080 {
+    encode zstd gzip
+
+    reverse_proxy /api/* {$API_INTERNAL_URL:bar-assistant:8080}
+    reverse_proxy /search/* {$MEILISEARCH_INTERNAL_URL:meilisearch:7070}
+
+    root * /var/www/html
+    file_server
+}
